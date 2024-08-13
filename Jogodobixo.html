@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo do Bixo</title>
+    <style>
+        /* css aq pai */ 
+        body {
+            font-family: Comic Sans; /*  essa letra e foda  */
+            text-align: center;
+            background-color: rgb(68, 67, 67);  /* N SEI UMA COR BOA SIFUDE  */
+        }
+        #ocara {
+            margin: 20px auto;
+            width: 300px;
+        }
+        #chute {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #chute-butao {                        /* TA TUDO JUNTO COMO ARRUAMAAAAAAAAAAAA */
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;  /*   BUTAO GRANDE FICA FEIO  */
+        }
+        #mensagem {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #historico {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ocara">
+        <h1>Jogo do Bixo</h1>
+        <select id="dificuldade"> 
+            <option value="20">Modo Fácil (20 chutes)</option>
+            <option value="10">Modo Médio (10 chutes)</option>
+            <option value="5">Modo Difícil (5 chutes)</option>
+            <option value="2">Modo Impossível (2 chutes)</option>
+        </select>
+        <input type="number" id="chute" min="1" max="100" placeholder="Digite um número entre 1 e 100">
+        <button id="chutebutao">Adivinhar</button>
+        <p id="mensagem"></p>
+        <p id="historico"></p>
+        <button id="continua" style="display: none;">Continue</button>
+    </div>
+                 /* vava SCRIPT aq */
+    <script>
+        const chute = document.getElementById('chute');
+        const chutebutao = document.getElementById('chutebutao');
+        const mensagem = document.getElementById('mensagem');
+        const historico = document.getElementById('historico');
+        const dificuldadeSelect = document.getElementById('dificuldade');
+        const continua = document.getElementById('continua');
+                                                                      
+                                                                     
+        let randomnumero = Math.floor(Math.random() * 100) + 1;  /* essa merda foi  */  
+        let guesses = [];
+        let maxTries = parseInt(dificuldadeSelect.value);  /* tirei do cu hehehe */  
+
+        dificuldadeSelect.addEventListener('change', function() {
+            maxTries = parseInt(dificuldadeSelect.value);
+            guesses = [];
+            updatehistorico();                                    /* o amiginho fez sozinho pra mim isso */  
+            mensagem.textContent = '';
+            continua.style.display = 'none';
+        });
+
+        chutebutao.addEventListener('click', function() {
+            const guess = parseInt(chute.value);
+
+            if (isNaN(guess) || guess < 1 || guess > 100) {  /* menos e + */
+                mensagem.textContent = 'Por favor, digite um número entre 1 e 100.';
+            } else if (guesses.includes(guess)) {
+                mensagem.textContent = 'Você já chutou esse número.';  /* antes dava pra chutar monte de numeros  */
+            } else {
+                guesses.push(guess);
+                updatehistorico(); 
+               
+                if (guess === randomnumero) {
+                    mensagem.textContent = 'Parabéns! Você acertou!';
+                    continua.style.display = 'block';   /* tem algo de errado aq  */
+                } else if (guesses.length === maxTries) {  
+                    mensagem.textContent = `Você perdeu! O número era ${randomnumero}.`; /* o cara perde mais da pra joga ainda */  
+                    continua.style.display = 'block';                                      /* e so não clicar no continue */  
+                } else if (guess < randomnumero) {
+                    mensagem.textContent = 'Tente um número maior.';
+                } else {              /* dificil de intenter, pra mim */  
+                    mensagem.textContent = 'Tente um número menor.';
+                }
+            }
+        });
+
+        continua.addEventListener('click', function() {
+            randomnumero = Math.floor(Math.random() * 100) + 1;
+            guesses = [];
+            updatehistorico();
+            mensagem.textContent = '';
+            continua.style.display = 'none';
+        });
+
+        function updatehistorico() {
+            historico.textContent = 'Números chutados: ' + guesses.join(', '); /* isso ta bom, acho */  
+        }
+    </script>
+</body>
+</html>
